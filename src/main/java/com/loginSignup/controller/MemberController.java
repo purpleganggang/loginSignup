@@ -2,6 +2,7 @@ package com.loginSignup.controller;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,6 @@ import com.loginSignup.entity.Member;
 import com.loginSignup.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 
 
@@ -29,6 +29,9 @@ public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
+    
+    private final ModelMapper modelMapper;
+    
     @GetMapping(value = "/join")
     public String memberForm(Model model){
         model.addAttribute("memberFormDto", new MemberFormDto());
@@ -57,7 +60,20 @@ public class MemberController {
          */
         try{
            // Member member=Member.createMember(memberFormDto, passwordEncoder, Role.ROLE_USER);
-        	Member member=Member.createMember(memberFormDto, passwordEncoder, memberFormDto.getRole());
+        	
+        	//1.직접 객체 변환처리 방법 :  Member entity 에 데이터 넣기 (MemberFormDto -> Member)
+        	//Member member=Member.createMember(memberFormDto, passwordEncoder, memberFormDto.getRole());
+        	      	
+        	/**
+        	 * 2.modelmapper 를 이용해서 Member entity 에 데이터 넣기 (MemberFormDto -> Member)
+        	 * 1) modelmapper 라이브러리 등록 (https://mvnrepository.com/artifact/org.modelmapper/modelmapper )
+        	 * 2) Application 에서 modelMapper() 를 Bean 등록 한다.
+        	 * 3) 다음과 같이 사용한다.
+        	 * https://modelmapper.org/getting-started/
+        	 */
+        	Member member= modelMapper.map(memberFormDto, Member.class);
+        	member.passwordEncode(memberFormDto.getPassword(), passwordEncoder);
+        	
             memberService.saveMember(member);
         }catch (IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());

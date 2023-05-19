@@ -54,6 +54,11 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
     
+    
+    public void passwordEncode(String password , PasswordEncoder passwordEncoder) {
+    	this.password=passwordEncoder.encode(password);
+    }
+    
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder, Role state){
     	return Member.builder()
     	.name(memberFormDto.getName())

@@ -39,6 +39,7 @@ public class MemberFormDto {
     
     
     
+    
     /**
      * 커스텀 유효성검사
      */
