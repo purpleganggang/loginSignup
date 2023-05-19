@@ -36,7 +36,7 @@ public class Member {
     @Comment("회원이름")
     private String name;
 
-    @Column(unique = true)
+    @Column(nullable = false,unique = true)
     @Comment("이메일")
     private String email; 
     
