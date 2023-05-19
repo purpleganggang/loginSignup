@@ -38,9 +38,10 @@ public class MemberController {
         if(bindingResult.hasErrors()){
             return "member/memberForm";
         }
-
+        
         try{
-            Member member=Member.createMember(memberFormDto, passwordEncoder, Role.USER);
+           // Member member=Member.createMember(memberFormDto, passwordEncoder, Role.ROLE_USER);
+        	Member member=Member.createMember(memberFormDto, passwordEncoder, memberFormDto.getRole());
             memberService.saveMember(member);
         }catch (IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());

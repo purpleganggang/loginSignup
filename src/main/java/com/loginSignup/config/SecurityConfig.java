@@ -55,8 +55,10 @@ public class SecurityConfig   {
 
 
             http.authorizeRequests()   //시큐리티 처리에 HttpServletRequest 를 이용한다는 것을 의미.
-                    .antMatchers("/", "/members/**","/board/**",  "/css/**", "/js/**", "/img/**", "/images/**").permitAll()  //permitAll() 을 통해 모든 사용자가 인증(로그인 없이 해당 경로 접근 )
-                    .antMatchers("/admin/**").hasRole("ADMIN")  // admin 으로 시작하는 경로는 해당 계정이 ADMIN Role 일 경우에만 접근이 가능
+                    .antMatchers("/", "/members/**","/css/**", "/js/**", "/img/**", "/images/**").permitAll()  //permitAll() 을 통해 모든 사용자가 인증(로그인 없이 해당 경로 접근 )
+                    .antMatchers("/board/**").hasAnyAuthority("ROLE_USER","ROLE_MANAGER","ROLE_ADMIN")
+                    .antMatchers("/admin/**").hasAnyAuthority("ROLE_MANAGER","ROLE_ADMIN")  // admin 으로 시작하는 경로는 해당 계정이 ADMIN Role 일 경우에만 접근이 가능
+                    //.antMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated();  //위설정한 경로를 제외한 나머지 경로들은 모든 인증을 요구하도록 설정
 
 
@@ -67,6 +69,10 @@ public class SecurityConfig   {
     }
 
 
+    /**
+     * 스프링부트 2.7 이상 passwordEncoder  @Bean 설정해 놓으면  로그인시  비밀번호가 passwordEncoder
+     * 되어 matches 되어진다. 
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
