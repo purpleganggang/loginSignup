@@ -16,15 +16,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.loginSignup.constant.Role;
 import com.loginSignup.dto.MemberFormDto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
 @Table(name="member")
 @Getter
-@Setter
+@Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Id
@@ -50,17 +55,15 @@ public class Member {
     private Role role;
     
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder, Role state){
-        Member member=new Member();
-        member.setName(memberFormDto.getName());
-        member.setEmail(memberFormDto.getEmail());
-        member.setAddress(memberFormDto.getAddress());
-        member.setPassword(passwordEncoder.encode(memberFormDto.getPassword()));
-        member.setRole(state);
-        return member;
+    	return Member.builder()
+    	.name(memberFormDto.getName())
+    	.email(memberFormDto.getEmail())
+    	.address(memberFormDto.getAddress())
+        .password(passwordEncoder.encode(memberFormDto.getPassword()))
+        .role(state)
+    	.build();
+
     }
     
-
-
-
 
 }
