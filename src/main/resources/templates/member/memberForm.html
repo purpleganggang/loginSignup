@@ -6,7 +6,7 @@
 
 <div layout:fragment="content">
 
-    <form action="/members/join" role="form" method="post" th:object="${memberFormDto}">
+    <form action="/members/join" role="form" method="post" th:object="${memberFormDto}" style="height: 800px;">
         <div class="form-group">
             <p class="fieldError">[[${errorMessage}]]</p>
         </div>
